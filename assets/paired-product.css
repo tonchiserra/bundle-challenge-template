@@ -1,0 +1,18 @@
+.product__paired-product {
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.paired-product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    h4 {
+        margin-top: 0;
+    }
+}

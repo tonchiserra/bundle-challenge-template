@@ -1,0 +1,47 @@
+{% if block.settings.paired_product != blank %}
+    {{ 'paired-product.css' | asset_url | stylesheet_tag }}
+
+    <div class="product__paired-product">
+        {% if block.settings.title != blank %}
+            <h2>{{ block.settings.title }}</h2>
+        {% endif %}
+
+        {% assign paired_product = block.settings.paired_product %}
+        {% assign section_id = section.id | append: block.id %}
+
+        <div class="product paired-product">
+            <div class="paired-product__gallery">
+                <span></span>
+            </div>
+
+            <div class="paired-product__info">
+                <h4>{{ paired_product.title }}</h4>
+                {% render 'price', product: paired_product %}
+
+                {% assign product_form_id = product_form_id | append: block.id %}
+
+                {% for b in section.blocks %}
+                    {% case b.type %}
+                        {% when 'variant_picker' %}
+                            {%- render 'product-variant-picker', 
+                                product: paired_product, 
+                                block: b, 
+                                product_form_id: product_form_id 
+                            -%}
+                            
+                        {% when 'buy_buttons' %}
+                            {%- render 'buy-buttons',
+                                block: b,
+                                product: paired_product,
+                                product_form_id: product_form_id,
+                                section_id: section_id,
+                                show_pickup_availability: false,
+                                force_hide_dynamic_checkout: true
+                            -%}
+                    {% endcase %}
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+{% endif %}
