@@ -19,14 +19,14 @@
       endif
 
       assign show_dynamic_checkout = false
-      unless force_hide_dynamic_checkout
+      unless paired_product_form
         if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
           assign show_dynamic_checkout = true
         endif
       endunless
     -%}
 
-    <product-form
+    <{% if paired_product_form %}paired-product-form{% else %}product-form{% endif %}
       class="product-form"
       data-hide-errors="{{ gift_card_recipient_feature_active }}"
       data-section-id="{{ section.id }}"
@@ -100,7 +100,7 @@
           {%- endif -%}
         </div>
       {%- endform -%}
-    </product-form>
+    </{% if paired_product_form %}paired-product-form{% else %}product-form{% endif %}>
   {%- else -%}
     <div class="product-form">
       <div class="product-form__buttons form">

@@ -9,39 +9,50 @@
         {% assign paired_product = block.settings.paired_product %}
         {% assign section_id = section.id | append: block.id %}
 
-        <div class="product paired-product">
-            <div class="paired-product__gallery">
-                <span></span>
+        <product-info 
+            id="MainProduct-{{ section_id }}"
+            class="gradient color-{{ section.settings.color_scheme }}"
+            data-section="{{ section.id }}"
+            data-product-id="{{ paired_product.id }}"
+            data-update-url="false"
+            data-url="{{ paired_product.url }}"
+        >
+            <div class="paired-product">
+                <div class="paired-product__gallery">
+                    {% assign variant_images = paired_product.images | where: 'attached_to_variant?', true | map: 'src' %}
+                    {% render 'product-media-gallery', product: paired_product, variant_images: variant_images, gallery_layout: 'thumbnail_slider', no_modal: true %}
+                </div>
+
+                <div class="paired-product__info">
+                    <h4>{{ paired_product.title }}</h4>
+                    {% render 'price', product: paired_product %}
+
+                    {%- assign product_form_id = 'product-form-' | append: section.id | append: '-' | append: paired_product.id -%}
+
+                    {% for b in section.blocks %}
+                        {% case b.type %}
+                            {% when 'variant_picker' %}
+                                {%- render 'product-variant-picker', 
+                                    product: paired_product, 
+                                    block: b, 
+                                    product_form_id: product_form_id 
+                                -%}
+                                
+                            {% when 'buy_buttons' %}
+                                {%- render 'buy-buttons',
+                                    block: b,
+                                    product: paired_product,
+                                    product_form_id: product_form_id,
+                                    section_id: section.id,
+                                    show_pickup_availability: false,
+                                    paired_product_form: true
+                                -%}
+                        {% endcase %}
+                    {% endfor %}
+                    
+                </div>
             </div>
-
-            <div class="paired-product__info">
-                <h4>{{ paired_product.title }}</h4>
-                {% render 'price', product: paired_product %}
-
-                {% assign product_form_id = product_form_id | append: block.id %}
-
-                {% for b in section.blocks %}
-                    {% case b.type %}
-                        {% when 'variant_picker' %}
-                            {%- render 'product-variant-picker', 
-                                product: paired_product, 
-                                block: b, 
-                                product_form_id: product_form_id 
-                            -%}
-                            
-                        {% when 'buy_buttons' %}
-                            {%- render 'buy-buttons',
-                                block: b,
-                                product: paired_product,
-                                product_form_id: product_form_id,
-                                section_id: section_id,
-                                show_pickup_availability: false,
-                                force_hide_dynamic_checkout: true
-                            -%}
-                    {% endcase %}
-                {% endfor %}
-                
-            </div>
-        </div>
+            
+        </product-info>
     </div>
 {% endif %}
