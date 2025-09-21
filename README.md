@@ -8,6 +8,8 @@ Password: test123
 [Link to the Shopify Function PR](https://github.com/tonchiserra/gserra-checkout/pull/2)
 [Link to the Checkout UI Extension PR](https://github.com/tonchiserra/gserra-checkout/pull/1)
 
+[Link to the extra Dynamic Bundle Discount PR](https://github.com/tonchiserra/gserra-checkout/pull/3)
+
 
 > **This repository is provided **exclusively** for the technical assessment.**  
 > Once the hiring process is complete, all of its contents may be deleted.

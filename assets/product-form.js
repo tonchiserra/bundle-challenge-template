@@ -153,7 +153,7 @@ class PairedProductForm extends ProductForm {
 
   handleFetchConfig() {
     let productOwnerId = this.closest('.product').querySelector('product-form').variantIdInput.value
-    let pairedProductPropValue = productOwnerId + '-' + this.variantIdInput.value + '-' + this.bundleDiscount
+    let pairedProductPropValue = `${productOwnerId}${this.variantIdInput.value}-${this.bundleDiscount}`
     let body = { 
       items: [
         { id: this.variantIdInput.value, quantity: 1, properties: { "_pairedProduct": pairedProductPropValue } },
