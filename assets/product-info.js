@@ -215,9 +215,11 @@ if (!customElements.get('product-info')) {
       }
 
       updateVariantInputs(variantId) {
-        this.querySelectorAll(
-          `form[id^="product-form-${this.dataset.section}"], #product-form-installment-${this.dataset.section}`
-        ).forEach((productForm) => {
+        let forms = Array.from(this.querySelectorAll(`#product-form-installment-${this.dataset.section}`))
+        forms.push(this.productForm)
+
+        forms.forEach((productForm) => {
+          console.log(productForm)
           const input = productForm.querySelector('input[name="id"]');
           input.value = variantId ?? '';
           input.dispatchEvent(new Event('change', { bubbles: true }));
