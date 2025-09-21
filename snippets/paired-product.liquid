@@ -17,7 +17,7 @@
             data-update-url="false"
             data-url="{{ paired_product.url }}"
         >
-            <div class="paired-product">
+            <div class="paired-product" data-discount="{{ block.settings.discount_percentage }}">
                 <div class="paired-product__gallery">
                     {% assign variant_images = paired_product.images | where: 'attached_to_variant?', true | map: 'src' %}
 
