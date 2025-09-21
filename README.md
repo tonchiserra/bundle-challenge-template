@@ -1,3 +1,14 @@
+# Technical Challenge – Dynamic Product Bundle (10 % OFF) - Gonzalo Serra.
+
+### Bundle Card
+[Link to theme preview](https://gserra-test.myshopify.com/?preview_theme_id=149716861125)
+Password: test123
+
+### Shopify Function & Checkout UI Extension
+[Link to the Shopify Function PR](https://github.com/tonchiserra/gserra-checkout/pull/2)
+[Link to the Checkout UI Extension PR](https://github.com/tonchiserra/gserra-checkout/pull/1)
+
+
 > **This repository is provided **exclusively** for the technical assessment.**  
 > Once the hiring process is complete, all of its contents may be deleted.
 
