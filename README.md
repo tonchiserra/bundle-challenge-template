@@ -1,7 +1,7 @@
 # Technical Challenge – Dynamic Product Bundle (10 % OFF) - Gonzalo Serra.
 
 ### Bundle Card
-[Link to theme preview](https://gserra-test.myshopify.com/?preview_theme_id=149716861125)
+[Link to theme preview](https://gserra-test.myshopify.com/?preview_theme_id=149694283973)
 Password: test123
 
 ### Shopify Function & Checkout UI Extension
