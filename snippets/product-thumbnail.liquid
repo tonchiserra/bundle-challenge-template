@@ -15,6 +15,7 @@
   - media_fit: {String} Method ("contain" or "cover") to fit image into container
   - media_width: {Float} The width percentage that the media column occupies on desktop.
   - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - no_modal: {Boolean} Disable the modal opener wrapper (optional)
 
   Usage:
   {% render 'product-thumbnail',
@@ -57,26 +58,34 @@
     class="product__modal-opener product__modal-opener--{{ media.media_type }}"
     data-modal="#ProductModal-{{ modal_id }}"
   >
-    <span
-      class="product__media-icon motion-reduce quick-add-hidden{% if media.media_type == 'image' %} product__media-icon--{{ section.settings.image_zoom }}{% endif %}"
-      aria-hidden="true"
-    >
-      {% case media.media_type %}
-        {% when 'video', 'external_video' %}
-          <span class="svg-wrapper">
-            {{- 'icon-play.svg' | inline_asset_content -}}
-          </span>
-        {% when 'model' %}
-          <span class="svg-wrapper">
-            {{- 'icon-3d-model.svg' | inline_asset_content -}}
-          </span>
-        {% else %}
-          <span class="svg-wrapper">
-            {{- 'icon-zoom.svg' | inline_asset_content -}}
-          </span>
-      {% endcase %}
-    </span>
-    {%- render 'loading-spinner' -%}
+    {% unless no_modal and media.media_type == 'image' %}
+      <span
+        class="product__media-icon motion-reduce quick-add-hidden{% if media.media_type == 'image' %} product__media-icon--{{ section.settings.image_zoom }}{% endif %}"
+        aria-hidden="true"
+      >
+        {% case media.media_type %}
+          {% when 'video', 'external_video' %}
+            <span class="svg-wrapper">
+              {{- 'icon-play.svg' | inline_asset_content -}}
+            </span>
+          {% when 'model' %}
+            <span class="svg-wrapper">
+              {{- 'icon-3d-model.svg' | inline_asset_content -}}
+            </span>
+          {% else %}
+            {% unless no_modal %}
+              <span class="svg-wrapper">
+                {{- 'icon-zoom.svg' | inline_asset_content -}}
+              </span>
+            {% endunless %}
+        {% endcase %}
+      </span>
+    {% endunless %}
+
+    {% unless no_modal %}
+      {%- render 'loading-spinner' -%}
+    {% endunless %}
+
     <div class="product__media media media--transparent">
       {{
         media.preview_image
@@ -88,16 +97,18 @@
           widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946'
       }}
     </div>
-    <button
-      class="product__media-toggle quick-add-hidden product__media-zoom-{{ section.settings.image_zoom }}"
-      type="button"
-      aria-haspopup="dialog"
-      data-media-id="{{ media.id }}"
-    >
-      <span class="visually-hidden">
-        {{ 'products.product.media.open_media' | t: index: position }}
-      </span>
-    </button>
+    {% unless no_modal %}
+      <button
+        class="product__media-toggle quick-add-hidden product__media-zoom-{{ section.settings.image_zoom }}"
+        type="button"
+        aria-haspopup="dialog"
+        data-media-id="{{ media.id }}"
+      >
+        <span class="visually-hidden">
+          {{ 'products.product.media.open_media' | t: index: position }}
+        </span>
+      </button>
+    {% endunless %}
   </modal-opener>
 
   {%- if media.media_type != 'image' -%}

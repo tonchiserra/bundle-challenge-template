@@ -1,0 +1,170 @@
+{% if block.settings.paired_product != blank %}
+    {{ 'paired-product.css' | asset_url | stylesheet_tag }}
+
+    <div class="product__paired-product">
+        {% if block.settings.title != blank %}
+            <h2>{{ block.settings.title }}</h2>
+        {% endif %}
+
+        {% assign paired_product = block.settings.paired_product %}
+        {% assign section_id = section.id | append: block.id %}
+
+        <product-info 
+            id="MainProduct-{{ section_id }}"
+            class="gradient color-{{ section.settings.color_scheme }}"
+            data-section="{{ section.id }}"
+            data-product-id="{{ paired_product.id }}"
+            data-update-url="false"
+            data-url="{{ paired_product.url }}"
+        >
+            <div class="paired-product" data-discount="{{ block.settings.discount_percentage }}">
+                <div class="paired-product__gallery">
+                    {% assign variant_images = paired_product.images | where: 'attached_to_variant?', true | map: 'src' %}
+
+                    {%- liquid
+                        assign single_media_visible = true
+
+                        assign media_count = paired_product.media.size
+                        if variant_images.size > 0
+                            assign media_count = media_count | minus: variant_images.size | plus: 1
+                        endif
+                    -%}
+
+                    <media-gallery
+                        id="MediaGallery-{{ section.id }}"
+                        role="region"
+                        aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
+                        data-desktop-layout="thumbnail_slider"
+                    >
+                        <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
+                        <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+                            <ul
+                                id="Slider-Gallery-{{ section.id }}"
+                                class="product__media-list contains-media grid grid--peek list-unstyled slider slider--everywhere"
+                                role="list"
+                            >
+                                {%- if paired_product.selected_or_first_available_variant.featured_media != null -%}
+                                    {%- assign featured_media = paired_product.selected_or_first_available_variant.featured_media -%}
+                                    <li
+                                        id="Slide-{{ section.id }}-{{ featured_media.id }}"
+                                        class="product__media-item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if featured_media.media_type != 'image' %} product__media-item--full{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+                                        data-media-id="{{ section.id }}-{{ featured_media.id }}"
+                                    >
+                                        {%- assign media_position = 1 -%}
+                                        {% render 'product-thumbnail',
+                                            media: featured_media,
+                                            media_count: media_count,
+                                            position: media_position,
+                                            desktop_layout: 'thumbnail_slider',
+                                            mobile_layout: section.settings.mobile_thumbnails,
+                                            loop: section.settings.enable_video_looping,
+                                            modal_id: section.id,
+                                            xr_button: true,
+                                            media_width: media_width,
+                                            media_fit: section.settings.media_fit,
+                                            constrain_to_viewport: section.settings.constrain_to_viewport,
+                                            lazy_load: true,
+                                            no_modal: true
+                                        %}
+                                    </li>
+                                {%- endif -%}
+                                {%- for media in paired_product.media -%}
+                                    {% if media_position >= limit
+                                        or media_position >= 1
+                                        and section.settings.hide_variants
+                                        and variant_images contains media.src
+                                    %}
+                                        {% continue %}
+                                    {% endif %}
+
+                                    {%- unless media.id == paired_product.selected_or_first_available_variant.featured_media.id -%}
+                                        <li
+                                            id="Slide-{{ section.id }}-{{ media.id }}"
+                                            class="product__media-item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if product.selected_or_first_available_variant.featured_media == nil and forloop.index == 1 %} is-active{% endif %}{% if media.media_type != 'image' %} product__media-item--full{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+                                            data-media-id="{{ section.id }}-{{ media.id }}"
+                                        >
+                                            {% assign media_position = media_position | default: 0 | plus: 1 %}
+                                            {% render 'product-thumbnail',
+                                                media: media,
+                                                media_count: media_count,
+                                                position: media_position,
+                                                desktop_layout: 'thumbnail_slider',
+                                                mobile_layout: section.settings.mobile_thumbnails,
+                                                loop: section.settings.enable_video_looping,
+                                                modal_id: section.id,
+                                                xr_button: true,
+                                                media_width: media_width,
+                                                media_fit: section.settings.media_fit,
+                                                constrain_to_viewport: section.settings.constrain_to_viewport,
+                                                lazy_load: lazy_load,
+                                                no_modal: true
+                                            %}
+                                        </li>
+                                    {%- endunless -%}
+                                {%- endfor -%}
+                            </ul>
+                            <div class="slider-buttons quick-add-hidden">
+                                <button
+                                    type="button"
+                                    class="slider-button slider-button--prev"
+                                    name="previous"
+                                    aria-label="{{ 'general.slider.previous_slide' | t }}"
+                                >
+                                    <span class="svg-wrapper">
+                                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                                    </span>
+                                </button>
+                                <div class="slider-counter caption">
+                                    <span class="slider-counter--current">1</span>
+                                    <span aria-hidden="true"> / </span>
+                                    <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+                                    <span class="slider-counter--total">{{ media_count }}</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    class="slider-button slider-button--next"
+                                    name="next"
+                                    aria-label="{{ 'general.slider.next_slide' | t }}"
+                                >
+                                    <span class="svg-wrapper">
+                                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                                    </span>
+                                </button>
+                            </div>
+                        </slider-component>
+                    </media-gallery>
+                </div>
+
+                <div class="paired-product__info">
+                    <a class="paired-product__title" href="{{ paired_product.url }}"><h4>{{ paired_product.title }}</h4></a>
+                    {% render 'price', product: paired_product %}
+
+                    {%- assign product_form_id = 'product-form-' | append: section.id | append: '-' | append: paired_product.id -%}
+
+                    {% for b in section.blocks %}
+                        {% case b.type %}
+                            {% when 'variant_picker' %}
+                                {%- render 'product-variant-picker', 
+                                    product: paired_product, 
+                                    block: b, 
+                                    product_form_id: product_form_id 
+                                -%}
+                                
+                            {% when 'buy_buttons' %}
+                                {%- render 'buy-buttons',
+                                    block: b,
+                                    product: paired_product,
+                                    product_form_id: product_form_id,
+                                    section_id: section.id,
+                                    show_pickup_availability: false,
+                                    paired_product_form: true
+                                -%}
+                        {% endcase %}
+                    {% endfor %}
+                    
+                </div>
+            </div>
+            
+        </product-info>
+    </div>
+{% endif %}

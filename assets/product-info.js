@@ -63,6 +63,9 @@ if (!customElements.get('product-info')) {
       handleOptionValueChange({ data: { event, target, selectedOptionValues } }) {
         if (!this.contains(event.target)) return;
 
+        // validate if the event was triggered from this product-info element
+        if(target.closest('product-info') !== this) return;
+
         this.resetProductFormState();
 
         const productUrl = target.dataset.productUrl || this.pendingRequestUrl || this.dataset.url;
@@ -212,9 +215,11 @@ if (!customElements.get('product-info')) {
       }
 
       updateVariantInputs(variantId) {
-        this.querySelectorAll(
-          `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
-        ).forEach((productForm) => {
+        let forms = Array.from(this.querySelectorAll(`#product-form-installment-${this.dataset.section}`))
+        forms.push(this.productForm)
+
+        forms.forEach((productForm) => {
+          console.log(productForm)
           const input = productForm.querySelector('input[name="id"]');
           input.value = variantId ?? '';
           input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -377,7 +382,7 @@ if (!customElements.get('product-info')) {
       }
 
       get productForm() {
-        return this.querySelector(`product-form`);
+        return this.querySelector(`.product-form`);
       }
 
       get productModal() {

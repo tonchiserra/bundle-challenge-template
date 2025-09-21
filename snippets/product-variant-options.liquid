@@ -6,6 +6,7 @@
   - option: {Object} current product_option object.
   - block: {Object} block object.
   - picker_type: {String} type of picker to dispay
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
 
 
   Usage:
@@ -16,9 +17,6 @@
     picker_type: picker_type
   %}
 {% endcomment %}
-{%- liquid
-  assign product_form_id = 'product-form-' | append: section.id
--%}
 
 {%- for value in option.values -%}
   {%- liquid
@@ -40,11 +38,11 @@
   -%}
 
   {%- capture input_id -%}
-    {{ section.id }}-{{ option.position }}-{{ forloop.index0 -}}
+    {{ product_form_id }}-{{ option.position }}-{{ forloop.index0 -}}
   {%- endcapture -%}
 
   {%- capture input_name -%}
-    {{ option.name }}-{{ option.position }}
+    {{ product_form_id }}-{{ option.name }}-{{ option.position }}
   {%- endcapture -%}
 
   {%- capture input_dataset -%}

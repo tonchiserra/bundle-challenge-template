@@ -45,6 +45,14 @@
             "show_gift_card_recipient": true
           }
         },
+        "paired_product_rxVNAn": {
+          "type": "paired-product",
+          "settings": {
+            "title": "Best Paired with",
+            "paired_product": "{{ product.metafields.custom.best_paired_with.value }}",
+            "discount_percentage": 100
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -63,13 +71,14 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "paired_product_rxVNAn",
         "description",
         "share"
       ],
       "settings": {
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
-        "media_size": "large",
+        "media_size": "medium",
         "constrain_to_viewport": true,
         "media_fit": "contain",
         "gallery_layout": "stacked",
